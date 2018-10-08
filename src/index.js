@@ -5,34 +5,84 @@ module.exports = function count(s, pairs) {
     N *= (pairs[i][0] ** pairs[i][1]);
   }
 
-  let counter = (n) => {
-    let S = [];
-    for(let i = 0; i < n; i++){
-      S.push(1);
+  let getArrayDivisorFor0 = (num) => {
+    let arr = [];
+
+    for(let i = 1; i <= num; i++){
+      arr.push(i);
     }
-    for(let i = 2; i <= n; i++){
-      if(n % i == 0){
-        for(let j = i; j <= n; j += i){
-          S[j - 1] = 0;
+    
+    for(let i = 2; i <= num; i++){
+      if(num % i == 0){
+        for(let j = i; j <= num; j += i){
+          arr[j - 1] = 0;
         }
       }
     }
-    var count = 0;
-    for(var i = 1; i < n; i++){
-      if(S[i] == 0){
-        count++;
+
+    return arr;
+  }
+
+  let getArrayDivisorFor1 = (array, num) => {
+    let arr = [];
+    
+    for(let i = 1; i <= num; i++){
+      arr.push(i);
+    }
+
+    for(let i = 0; i <= num; i++){
+      if(array[i] != 0){
+        arr[i] = 0;
       }
     }
-    return count;
-  }  
 
-  if(s == '1' && N < 10000000){
-    return N - counter(N);
+    return arr;
   }
 
-  if(s == '0'){
-    return counter(N);
-  }
+  let logic = (str, N) => {
+    let count = 0;
 
-  return answer;
+    if(N < 10000000){
+      let arr0 = getArrayDivisorFor0(N);
+      let arr1 = getArrayDivisorFor1(arr0, N);
+
+      if(str == '1'){
+        for(let i = 0; i < N; i++){
+          if(arr1[i] == 0){
+            count++;
+          }
+        }
+      }
+
+      if(str == '0'){
+        for(let i = 0; i < N; i++){
+          if(arr0[i] == 0){
+            count++;
+          }
+        }
+      }
+
+      if(str == '01'){
+        for(let i = 0; i < N; i++){
+          if(arr0[i] == 0 && arr1[i + 1] == 0){
+            count++;
+          }
+        }
+      }
+
+      if(str == '11'){
+        for(let i = 0; i < N; i++){
+          if(arr1[i] == 0 && arr1[i + 1] == 0){
+            count++;
+          }
+        }
+      }
+      return count;
+    }    
+    else{
+      return N;
+    }  
+  }
+  
+  return logic(s, N);
 }
